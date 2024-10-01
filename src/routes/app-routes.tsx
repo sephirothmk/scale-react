@@ -6,7 +6,8 @@ export type NavRoute = {
 
 export const appRoutes = {
     home: '/',
-    artist: '/artist'
+    artist: '/artist',
+    login: '/login'
 }
 
 export const navRoutes: NavRoute[] = [
