@@ -1,11 +1,15 @@
-interface ArtistBioProps {
-    bio: string;
-}
+import {useArtistFromProvider} from "@/providers/artist-provider.tsx";
 
-const ArtistBio = ({ bio }: ArtistBioProps) => {
+// interface ArtistBioProps {
+//     bio: string;
+// }
+
+const ArtistBio = () => { // { bio }: ArtistBioProps
+    const {artist} = useArtistFromProvider()
+
     return (
         <div className="flex flex-col p-4">
-            <span>The bio is {bio}</span>
+            <span>The bio is {artist?.strBiographyEN}</span>
         </div>
     )
 }

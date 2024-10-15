@@ -3,16 +3,11 @@ import {appRoutes} from "@/routes/app-routes.tsx";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-
-const signupSchema = z.object({
-    name: z.string().min(3),
-    email: z.string().email(),
-    password: z.string().min(4),
-    confirmPassword: z.string().min(4),
-}).refine(data => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['passwordConfirm'],
-})
+import {SignupData, signupSchema, useSignup} from "@/api/auth/mutations/use-signup.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import {Card} from "@/components/ui/card.tsx";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form.tsx";
+import {Input} from "@/components/ui/input.tsx";
 
 const SignupPage = () => {
     const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -25,34 +20,114 @@ const SignupPage = () => {
         },
     })
 
+    const { signupLoading, signupError, executeSignup} = useSignup()
+
     const authenticated = localStorage.getItem("authenticated");
     if (authenticated == "YES") {
         return <Navigate to={appRoutes.home} />
     }
 
-    const signup = (values: z.infer<typeof signupSchema>) => {
+    const signup = async (values: SignupData) => {
         console.log("Form has been submitted", values)
+        await executeSignup(values)
     }
 
     return(
-        <div className="flex flex-col justify-center items-center p-4">
+        <Card className="w-fit flex flex-col justify-center items-center p-4">
             <span>Signup Page</span>
-            <form className="flex flex-col gap-4" onSubmit={signupForm.handleSubmit(signup)}>
-                <input className="border-2 border-black w-fit" placeholder="Name" {...signupForm.register("name")} type="text"/>
-                {signupForm.formState.errors.name && <span>{signupForm.formState.errors.name.message}</span>}
+            <Form {...signupForm}>
+                <form className="flex flex-col gap-4" onSubmit={signupForm.handleSubmit(signup)}>
+                    <FormField
+                        control={signupForm.control}
+                        name="name"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="min-w-32">Name</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="Name"
+                                        type="name"
+                                        autoCapitalize="none"
+                                        autoCorrect="off"
+                                        disabled={signupForm.formState.isLoading}
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <input className="border-2 border-black w-fit" placeholder="Email" {...signupForm.register("email")} type="email"/>
-                {signupForm.formState.errors.email && <span>{signupForm.formState.errors.email.message}</span>}
+                    <FormField
+                        control={signupForm.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="min-w-32">Email</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="name@example.com"
+                                        type="email"
+                                        autoCapitalize="none"
+                                        autoCorrect="off"
+                                        disabled={signupForm.formState.isLoading}
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <input className="border-2 border-black w-fit" placeholder="Password" {...signupForm.register("password")} type="password"/>
-                {signupForm.formState.errors.password && <span>{signupForm.formState.errors.password.message}</span>}
+                    <FormField
+                        control={signupForm.control}
+                        name="password"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="min-w-32">Password</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="enter your password"
+                                        type="password"
+                                        autoCapitalize="none"
+                                        autoCorrect="off"
+                                        disabled={signupForm.formState.isLoading}
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <input className="border-2 border-black w-fit" placeholder="Confirm Password" {...signupForm.register("confirmPassword")} type="password"/>
-                {signupForm.formState.errors.confirmPassword && <span>{signupForm.formState.errors.confirmPassword.message}</span>}
+                    <FormField
+                        control={signupForm.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="min-w-32">Confirm Password</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="confirm your password"
+                                        type="password"
+                                        autoCapitalize="none"
+                                        autoCorrect="off"
+                                        disabled={signupForm.formState.isLoading}
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <button className="w-fit p-4 border-2 border-black" type="submit">Sign Up</button>
-            </form>
-        </div>
+                    <Button className="w-fit p-4 border-2 border-black" type="submit" disabled={signupLoading}>Sign Up</Button>
+
+                    {signupLoading && <span>Loading....</span>}
+                    {signupError && <span>{signupError.message}</span>}
+                </form>
+            </Form>
+        </Card>
     )
 }
 

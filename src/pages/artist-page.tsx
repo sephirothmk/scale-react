@@ -1,15 +1,17 @@
 import {useCallback, useMemo, useState} from "react";
 import useCustomState from "@/lib/use-custom-state.tsx";
-import {useArtist} from "@/api/artist/queries/use-artist.tsx";
-import {useParams} from "react-router-dom";
+// import {useArtist} from "@/api/artist/queries/use-artist.tsx";
+// import {useParams} from "react-router-dom";
 import ArtistInfo from "@/features/artist/artist-info.tsx";
+import {useArtistFromProvider} from "@/providers/artist-provider.tsx";
 
 const ArtistPage = () => {
-    const { artistId } = useParams();
+    // const { artistId } = useParams();
     const { counter, increment, decrement } = useCustomState(35);
     const [secondCounter, setSecondCounter] = useState(2)
-    const {artist, artistLoading, artistError, fetch} = useArtist(artistId)
+    // const {artist, artistLoading, artistError, fetch} = useArtist(artistId)
 
+    const {artist, artistLoading, artistError} = useArtistFromProvider()
 
     function veryDemandingFunction() {
         console.log(secondCounter);
@@ -40,9 +42,9 @@ const ArtistPage = () => {
                 {artistLoading && <span>Loading artist...</span>}
                 {artistError && <span>{artistError.message}</span>}
 
-                {artist && <ArtistInfo artist={artist} />}
+                {artist && <ArtistInfo />}
 
-                <button className="border-2 w-32 border-black" onClick={() => fetch()}>Refetch</button>
+                {/*<button className="border-2 w-32 border-black" onClick={() => fetch()}>Refetch</button>*/}
 
                 <span>The current value of our expensive calculation is {expensiveCalculationValue}</span>
                 <span>The current value of our expensive function is {expensiveFunction()}</span>
