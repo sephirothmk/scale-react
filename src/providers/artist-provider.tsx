@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { delay } from "@/lib/utilities.ts";
 import {Artist, getArtist} from "@/api/artist/artist-api.ts";
+import {useParams} from "react-router-dom";
 
 type ArtistProviderProps = {
     children: ReactNode
@@ -21,6 +22,8 @@ const initialState: ArtistProviderState = {
 const ArtistProviderContext = createContext<ArtistProviderState>(initialState)
 
 export function ArtistProvider({ children, ...props }: ArtistProviderProps) {
+    const { artistId } = useParams();
+
     const [artist, setArtist] = useState<Artist>();
     const [artistError, setError] = useState<Error>();
     const [artistLoading, setLoading] = useState(false);
@@ -35,8 +38,10 @@ export function ArtistProvider({ children, ...props }: ArtistProviderProps) {
 
         try {
             await delay(3000)
-            const artistData = await getArtist('112024');
-            if (artistData) setArtist(artistData[0])
+            if (artistId) {
+                const artistResult = await getArtist(artistId)
+                if (artistResult) setArtist(artistResult[0])
+            }
         } catch (err: unknown) {
             if (err instanceof Error) {
                 setError(err);
