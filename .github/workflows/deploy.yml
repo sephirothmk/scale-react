@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: dev
 
     steps:
       - name: Checkout code
@@ -31,6 +33,6 @@ jobs:
           args: --acl public-read
         env:
           SOURCE_DIR: build/
-          AWS_S3_BUCKET: scale-react-s3
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
