@@ -5,7 +5,7 @@ import HomePage from "@/pages/home-page.tsx";
 import ArtistPage from "@/pages/artist-page.tsx";
 import LoginPage from "@/pages/login-page.tsx";
 import SignupPage from "@/pages/signup-page.tsx";
-import {ArtistProvider} from "@/providers/artist-provider.tsx";
+// import {ArtistProvider} from "@/providers/artist-provider.tsx";
 
 const AppRouter = () => {
     return(
@@ -22,9 +22,10 @@ const AppRouter = () => {
                 path={`${appRoutes.artist}/:artistId`}
                 element={
                     <MainLayout>
-                        <ArtistProvider>
-                            <ArtistPage />
-                        </ArtistProvider>
+                        {/*<ArtistProvider>*/}
+                        {/*   */}
+                        {/*</ArtistProvider>*/}
+                        <ArtistPage />
                     </MainLayout>
                 }
             />

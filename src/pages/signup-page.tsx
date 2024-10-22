@@ -3,11 +3,12 @@ import {appRoutes} from "@/routes/app-routes.tsx";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {SignupData, signupSchema, useSignup} from "@/api/auth/mutations/use-signup.tsx";
+import {SignupData, signupSchema} from "@/api/auth/mutations/use-signup.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {Card} from "@/components/ui/card.tsx";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form.tsx";
 import {Input} from "@/components/ui/input.tsx";
+import {useSignupMutation} from "@/api/auth/mutations/auth-mutations.ts";
 
 const SignupPage = () => {
     const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -20,7 +21,9 @@ const SignupPage = () => {
         },
     })
 
-    const { signupLoading, signupError, executeSignup} = useSignup()
+    // const { signupLoading, signupError, executeSignup} = useSignup()
+
+    const { mutate, error, isPending,  } = useSignupMutation()
 
     const authenticated = localStorage.getItem("authenticated");
     if (authenticated == "YES") {
@@ -29,7 +32,7 @@ const SignupPage = () => {
 
     const signup = async (values: SignupData) => {
         console.log("Form has been submitted", values)
-        await executeSignup(values)
+        mutate(values)
     }
 
     return(
@@ -121,10 +124,10 @@ const SignupPage = () => {
                         )}
                     />
 
-                    <Button className="w-fit p-4 border-2 border-black" type="submit" disabled={signupLoading}>Sign Up</Button>
+                    <Button className="w-fit p-4 border-2 border-black" type="submit" disabled={isPending}>Sign Up</Button>
 
-                    {signupLoading && <span>Loading....</span>}
-                    {signupError && <span>{signupError.message}</span>}
+                    {isPending && <span>Loading....</span>}
+                    {error && <span>{error.message}</span>}
                 </form>
             </Form>
         </Card>

@@ -1,17 +1,20 @@
 import {useCallback, useMemo, useState} from "react";
 import useCustomState from "@/lib/use-custom-state.tsx";
 // import {useArtist} from "@/api/artist/queries/use-artist.tsx";
-// import {useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import ArtistInfo from "@/features/artist/artist-info.tsx";
-import {useArtistFromProvider} from "@/providers/artist-provider.tsx";
+import {useArtistQuery} from "@/api/artist/queries/artist-queries.ts";
+// import {useArtistFromProvider} from "@/providers/artist-provider.tsx";
 
 const ArtistPage = () => {
-    // const { artistId } = useParams();
+    const { artistId } = useParams();
     const { counter, increment, decrement } = useCustomState(35);
     const [secondCounter, setSecondCounter] = useState(2)
     // const {artist, artistLoading, artistError, fetch} = useArtist(artistId)
 
-    const {artist, artistLoading, artistError} = useArtistFromProvider()
+    // const {artist, artistLoading, artistError} = useArtistFromProvider()
+
+    const { data: artist, error, isLoading } = useArtistQuery(artistId || "")
 
     function veryDemandingFunction() {
         console.log(secondCounter);
@@ -39,8 +42,8 @@ const ArtistPage = () => {
             </div>
 
             <div className="flex flex-col p-4">
-                {artistLoading && <span>Loading artist...</span>}
-                {artistError && <span>{artistError.message}</span>}
+                {isLoading && <span>Loading artist...</span>}
+                {error && <span>{error.message}</span>}
 
                 {artist && <ArtistInfo />}
 

@@ -7,7 +7,7 @@ const NavigationMenu = () => {
     const {theme, setTheme} = useTheme();
 
     return (
-        <div className="p-2 bg-primary dark:bg-primaryDark flex items-center justify-center">
+        <div className="p-2 bg-primary flex items-center justify-center">
             <ul className="text-nav flex gap-10">
                 {navRoutes.map((route, index) => {
                     return <NavItem key={index} route={route} />;

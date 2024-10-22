@@ -9,13 +9,9 @@ export default {
   	extend: {
   		colors: {
   			primary: {
-  				DEFAULT: "blue",
+  				DEFAULT: 'var(--primary)',
   				foreground: 'hsl(var(--primary-foreground))'
   			},
-			primaryDark: {
-				DEFAULT: 'pink',
-				foreground: 'hsl(var(--primary-foreground))'
-			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
